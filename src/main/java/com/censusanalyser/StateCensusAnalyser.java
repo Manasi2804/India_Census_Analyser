@@ -15,25 +15,28 @@ import java.util.Iterator;
 public class StateCensusAnalyser {
     public static int loadCSVFileData(String filePath) throws CensusAnalyserException
     {
-        int noOfRecords = 0;
-        try(Reader reader = Files.newBufferedReader(Paths.get(filePath)))
+        try
         {
+            Reader reader = Files.newBufferedReader(Paths.get(filePath));
             CSVReader csvReader = new CSVReader(reader);
-            CsvToBean<CSVStateCensus> csvToBean = new CsvToBeanBuilder<CSVStateCensus>(csvReader).
-                    withType(CSVStateCensus.class)
-                    .build();
+            CsvToBeanBuilder<CSVStateCensus> csvToBeanBuilder = new CsvToBeanBuilder<>(csvReader);
+            csvToBeanBuilder.withType(CSVStateCensus.class);
+            csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
+            CsvToBean<CSVStateCensus> csvToBean = csvToBeanBuilder.build();
             Iterator<CSVStateCensus> csvRecords = csvToBean.iterator();
+            int noOfRecords = 0;
             while (csvRecords.hasNext())
             {
                 noOfRecords++;
-                csvRecords.next();
+                CSVStateCensus censusData = csvRecords.next();
+                System.out.println(censusData);
             }
+            return noOfRecords;
         }
         catch (IOException e)
         {
             throw new CensusAnalyserException(CensusAnalyserException.ExceptionType.ENTERED_WRONG_FILE_NAME,"FILE NAME IS INCORRECT");
         }
-        return noOfRecords;
     }
     public static void getFileExtension(File filePath) throws CensusAnalyserException
     {

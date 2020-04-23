@@ -25,6 +25,7 @@ public class StateCensusAnalyserTest
         try
         {
             int noOfRecords = StateCensusAnalyser.loadCSVFileData(PATH_OF_CSV_FILE_FOR_FILE_NOT_FOUND_EXCEPTION);
+            System.out.println("records--> "+ noOfRecords);
         }
         catch (CensusAnalyserException e)
         {
