@@ -29,7 +29,7 @@ public class StateCensusAnalyser {
             {
                 noOfRecords++;
                 CSVStateCensus censusData = csvRecords.next();
-                System.out.println(censusData);
+                //System.out.println(censusData);
             }
             return noOfRecords;
         }
