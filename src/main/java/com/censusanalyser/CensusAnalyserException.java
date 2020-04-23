@@ -1,13 +1,12 @@
 package com.censusanalyser;
 
-public class CensusAnalyserException extends Exception{
+public class CensusAnalyserException extends Exception
+{
     public enum ExceptionType
     {
         ENTERED_WRONG_FILE_NAME, ENTERED_WRONG_FILE_TYPE,
-        INCORRECT_DELIMITER;
-
+        INCORRECT_DELIMITER, INCORRECT_DELIMITER_OR_HEADER;
     }
-
     public ExceptionType type;
 
     // Constructor

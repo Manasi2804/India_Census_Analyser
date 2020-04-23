@@ -39,7 +39,7 @@ public class StateCensusAnalyser {
         }
         catch (RuntimeException e)
         {
-            throw new CensusAnalyserException(CensusAnalyserException.ExceptionType.INCORRECT_DELIMITER,"FILE DELIMITER IS INCORRECT");
+            throw new CensusAnalyserException(CensusAnalyserException.ExceptionType.INCORRECT_DELIMITER_OR_HEADER,"FILE DELIMITER OR HEADER IS INCORRECT");
         }
     }
     public static void getFileExtension(File filePath) throws CensusAnalyserException
