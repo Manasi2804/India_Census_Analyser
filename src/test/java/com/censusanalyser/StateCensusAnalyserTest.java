@@ -18,6 +18,7 @@ public class StateCensusAnalyserTest {
     private static final String PATH_OF_STATE_CODE_CSV_FILE_FOR_FILE_NOT_FOUND = "./src/test/resources/StateCode.csv";
     private static final String PATH_OF_STATE_CODE_CSV_FILE_FOR_INCORRECT_TYPE = "/home/Desktop/IndiaCensusAnalyser/src/test/resources/StateCode.docx";
     private static final String PATH_OF_STATE_CODE_CSV_FILE_INCORRECT_DELIMITER = "./src/test/resources/StateCode.csv";
+    private static final String PATH_OF_STATE_CODE_CSV_FILE_INCORRECT_HEADER = "./src/test/resources/StateCode.csv";
 
     //1.1
     @Test
@@ -95,6 +96,20 @@ public class StateCensusAnalyserTest {
         try
         {
             int noOfRecords = StateCodeAnalyser.loadCSVFileData(PATH_OF_STATE_CODE_CSV_FILE_INCORRECT_DELIMITER);
+            Assert.assertEquals(37,noOfRecords);
+        }
+        catch (CensusAnalyserException e)
+        {
+            Assert.assertEquals(CensusAnalyserException.ExceptionType.INCORRECT_DELIMITER_OR_HEADER,e.type);
+        }
+    }
+    //2.5
+    @Test
+    public void givenTheStateCodeCSVFile_IfHeaderIsIncorrect_ShouldThrowCustomException() throws IOException
+    {
+        try
+        {
+            int noOfRecords = StateCodeAnalyser.loadCSVFileData(PATH_OF_STATE_CODE_CSV_FILE_INCORRECT_HEADER);
             Assert.assertEquals(37,noOfRecords);
         }
         catch (CensusAnalyserException e)

@@ -29,12 +29,17 @@ public class StateCodeAnalyser {
             {
                 noOfRecords++;
                 csvRecords.next();
+
             }
             return noOfRecords;
         }
         catch (NoSuchFileException e)
         {
             throw new CensusAnalyserException(CensusAnalyserException.ExceptionType.ENTERED_WRONG_FILE_NAME,"FILE NAME IS INCORRECT");
+        }
+        catch (RuntimeException e)
+        {
+            throw new CensusAnalyserException(CensusAnalyserException.ExceptionType.INCORRECT_DELIMITER_OR_HEADER,"FILE DELIMITER OR HEADER IS INCORRECT");
         }
     }
     public static void getFileExtension(File filePath) throws CensusAnalyserException
