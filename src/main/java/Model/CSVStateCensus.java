@@ -59,7 +59,8 @@ public class CSVStateCensus
         return DensityPerSqkm;
     }
 
-    public void setDensityPerSqkm(int densityPerSqkm) {
+    public void setDensityPerSqkm(int densityPerSqkm)
+    {
         DensityPerSqkm = densityPerSqkm;
     }
 

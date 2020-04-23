@@ -11,23 +11,29 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Iterator;
 
-public class StateCensusAnalyser
-{
-    public static int loadCSVFileData(String filePath) throws IOException
+public class StateCensusAnalyser {
+    public static int loadCSVFileData(String filePath) throws CensusAnalyserException
     {
         int noOfRecords = 0;
         try(Reader reader = Files.newBufferedReader(Paths.get(filePath)))
         {
             CSVReader csvReader = new CSVReader(reader);
             CsvToBean<CSVStateCensus> csvToBean = new CsvToBeanBuilder<CSVStateCensus>(csvReader).
-                    withType(CSVStateCensus.class).build();
+                    withType(CSVStateCensus.class)
+                    .build();
             Iterator<CSVStateCensus> csvRecords = csvToBean.iterator();
             while (csvRecords.hasNext())
             {
                 noOfRecords++;
-               csvRecords.next();
+                csvRecords.next();
             }
+        }
+        catch (IOException e)
+        {
+            throw new CensusAnalyserException(CensusAnalyserException.ExceptionType.ENTERED_WRONG_FILE_NAME,"FILE NOT FOUND");
         }
         return noOfRecords;
     }
+
 }
+
