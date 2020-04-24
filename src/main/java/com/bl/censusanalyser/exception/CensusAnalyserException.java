@@ -2,6 +2,7 @@ package com.bl.censusanalyser.exception;
 
 public class CensusAnalyserException extends RuntimeException
 {
+
     public enum ExceptionType
     {
         INCORRECT_DELIMITER_OR_HEADER, ENTERED_WRONG_FILE_NAME,

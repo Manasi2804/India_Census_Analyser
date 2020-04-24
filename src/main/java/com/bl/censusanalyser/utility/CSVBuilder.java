@@ -8,9 +8,9 @@ import com.opencsv.bean.CsvToBeanBuilder;
 import java.io.Reader;
 import java.util.Iterator;
 
-public class OpenCSV{
-
-    public static <E> Iterator<E> getCSVFileIterator(Reader reader, Class csvClass) throws CensusAnalyserException
+public class CSVBuilder implements ICSVBuilder {
+    @Override
+    public <E> Iterator<E> getCSVFileIterator(Reader reader, Class csvClass) throws CensusAnalyserException
     {
         try
         {
@@ -23,7 +23,8 @@ public class OpenCSV{
             throw new CensusAnalyserException(CensusAnalyserException.ExceptionType.UNABLE_TO_PARSE, e.getMessage());
         }
     }
-    public static <E> int getCount(Iterator<E> csvRecords)
+    @Override
+    public <E> int getCount(Iterator<E> csvRecords)
     {
         int noOfRecords = 0;
         while (csvRecords.hasNext())
