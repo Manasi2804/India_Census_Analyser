@@ -6,32 +6,23 @@ import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 
 import java.io.Reader;
-import java.util.Iterator;
+import java.util.List;
 
-public class CSVBuilder implements ICSVBuilder {
+public class CSVBuilder implements ICSVBuilder
+{
     @Override
-    public <E> Iterator<E> getCSVFileIterator(Reader reader, Class csvClass) throws CSVBuilderException
+    public <E> List<E> getCSVFileList(Reader reader, Class csvClass) throws CSVBuilderException
     {
         try
         {
             CSVReader csvReader = new CSVReader(reader);
             CsvToBean<E> csvToBean = new CsvToBeanBuilder<E>(csvReader).withType(csvClass).build();
-            return csvToBean.iterator();
+            return csvToBean.parse();
         }
         catch (IllegalStateException e)
         {
             throw new CSVBuilderException(CSVBuilderException.ExceptionType.UNABLE_TO_PARSE, e.getMessage());
         }
     }
-    @Override
-    public <E> int getCount(Iterator<E> csvRecords)
-    {
-        int noOfRecords = 0;
-        while (csvRecords.hasNext())
-        {
-            noOfRecords++;
-            csvRecords.next();
-        }
-        return noOfRecords;
-    }
+
 }
