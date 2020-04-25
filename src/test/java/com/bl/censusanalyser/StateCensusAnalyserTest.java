@@ -2,6 +2,7 @@ package com.bl.censusanalyser;
 
 import com.bl.censusanalyser.exception.CSVBuilderException;
 import com.bl.censusanalyser.model.CSVStateCensus;
+import com.bl.censusanalyser.model.StateCode;
 import com.bl.censusanalyser.service.CensusAnalyser;
 import com.google.gson.Gson;
 import org.junit.Assert;
@@ -114,5 +115,14 @@ public class StateCensusAnalyserTest {
         CSVStateCensus[] censusCSV = new Gson().fromJson(sortedCensusData, CSVStateCensus[].class);
         Assert.assertEquals("Andhra Pradesh", censusCSV[0].getState());
         Assert.assertEquals("West Bengal", censusCSV[28].getState());
+    }
+    //4.1
+    @Test
+    public void givenTheStateCodeCSVFile_WhenSortedOnStateCode_ShouldReturnSortedList() throws IOException, CSVBuilderException {
+        censusAnalyser.loadStateCodeCSVFileData(PATH_OF_STATE_CODE_CSV_FILE);
+        String sortedStateCodeData = censusAnalyser.getStateCodeWiseSortedData();
+        StateCode[] stateCodes = new Gson().fromJson(sortedStateCodeData, StateCode[].class);
+        Assert.assertEquals("AD", stateCodes[0].stateCode);
+        Assert.assertEquals("WB", stateCodes[36].stateCode);
     }
 }
