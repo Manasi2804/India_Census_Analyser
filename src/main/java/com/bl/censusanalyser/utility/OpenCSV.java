@@ -1,6 +1,6 @@
 package com.bl.censusanalyser.utility;
 
-import com.bl.censusanalyser.exception.CensusAnalyserException;
+import com.bl.censusanalyser.exception.CSVBuilderException;
 import com.opencsv.CSVReader;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
@@ -10,7 +10,7 @@ import java.util.Iterator;
 
 public class OpenCSV{
 
-    public static <E> Iterator<E> getCSVFileIterator(Reader reader, Class csvClass) throws CensusAnalyserException
+    public static <E> Iterator<E> getCSVFileIterator(Reader reader, Class csvClass) throws CSVBuilderException
     {
         try
         {
@@ -20,7 +20,7 @@ public class OpenCSV{
         }
         catch (IllegalStateException e)
         {
-            throw new CensusAnalyserException(CensusAnalyserException.ExceptionType.UNABLE_TO_PARSE, e.getMessage());
+            throw new CSVBuilderException(CSVBuilderException.ExceptionType.UNABLE_TO_PARSE, e.getMessage());
         }
     }
     public static <E> int getCount(Iterator<E> csvRecords)

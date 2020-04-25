@@ -1,13 +1,10 @@
 package com.bl.censusanalyser.service;
 
-import com.bl.censusanalyser.exception.CensusAnalyserException;
+import com.bl.censusanalyser.exception.CSVBuilderException;
 import com.bl.censusanalyser.model.CSVStateCensus;
 import com.bl.censusanalyser.model.StateCode;
 import com.bl.censusanalyser.utility.CSVBuilderFactory;
 import com.bl.censusanalyser.utility.ICSVBuilder;
-import com.opencsv.CSVReader;
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,25 +17,19 @@ import java.util.Iterator;
     public class CensusAnalyser
     {
         ICSVBuilder csvBuilder = new CSVBuilderFactory().createCSVBuilder();
-        public int loadStateCensusCSVFileData(String filePath) throws CensusAnalyserException, IOException
-        {
-            try (Reader reader = Files.newBufferedReader(Paths.get(filePath)))
-            {
-                Iterator<CSVStateCensus> csvRecords = csvBuilder.getCSVFileIterator(reader , CSVStateCensus.class);
+        public int loadStateCensusCSVFileData(String filePath) throws CSVBuilderException, IOException {
+            try (Reader reader = Files.newBufferedReader(Paths.get(filePath))) {
+                Iterator<CSVStateCensus> csvRecords = csvBuilder.getCSVFileIterator(reader, CSVStateCensus.class);
                 return csvBuilder.getCount(csvRecords);
-            }
-            catch (NoSuchFileException e)
-            {
-                throw new CensusAnalyserException(CensusAnalyserException.ExceptionType.ENTERED_WRONG_FILE_NAME,
+            } catch (NoSuchFileException e) {
+                throw new CSVBuilderException(CSVBuilderException.ExceptionType.ENTERED_WRONG_FILE_NAME,
                         "FILE NAME IS INCORRECT");
-            }
-            catch (RuntimeException e)
-            {
-                throw new CensusAnalyserException(CensusAnalyserException.ExceptionType.INCORRECT_DELIMITER_OR_HEADER,
+            } catch (RuntimeException e) {
+                throw new CSVBuilderException(CSVBuilderException.ExceptionType.INCORRECT_DELIMITER_OR_HEADER,
                         "FILE DELIMITER OR HEADER IS INCORRECT");
             }
         }
-        public int loadStateCodeCSVFileData(String filePath) throws IOException, CensusAnalyserException
+            public int loadStateCodeCSVFileData(String filePath) throws IOException, CSVBuilderException
         {
             try (Reader reader = Files.newBufferedReader(Paths.get(filePath)))
             {
@@ -47,16 +38,16 @@ import java.util.Iterator;
             }
             catch (NoSuchFileException e)
             {
-                throw new CensusAnalyserException(CensusAnalyserException.ExceptionType.ENTERED_WRONG_FILE_NAME,
+                throw new CSVBuilderException(CSVBuilderException.ExceptionType.ENTERED_WRONG_FILE_NAME,
                         "FILE NAME IS INCORRECT");
             }
             catch (RuntimeException e)
             {
-                throw new CensusAnalyserException(CensusAnalyserException.ExceptionType.INCORRECT_DELIMITER_OR_HEADER,
+                throw new CSVBuilderException(CSVBuilderException.ExceptionType.INCORRECT_DELIMITER_OR_HEADER,
                         "FILE DELIMITER OR HEADER IS INCORRECT");
             }
         }
-        public static void getFileExtension(File filePath) throws CensusAnalyserException
+        public static void getFileExtension(File filePath) throws CSVBuilderException
         {
             String fileName = filePath.getName();
             String extension = null;
@@ -66,16 +57,8 @@ import java.util.Iterator;
             }
             if (!(extension.equals("csv")))
             {
-                throw new CensusAnalyserException(CensusAnalyserException.ExceptionType.ENTERED_WRONG_FILE_TYPE,
+                throw new CSVBuilderException(CSVBuilderException.ExceptionType.ENTERED_WRONG_FILE_TYPE,
                         "FILE TYPE IS INCORRECT");
             }
         }
     }
-
-
-
-
-
-
-
-
