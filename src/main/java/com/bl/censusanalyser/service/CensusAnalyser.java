@@ -23,24 +23,24 @@ public class CensusAnalyser {
     Collection<IndiaCensusDAO> censusRecords = null;
     HashMap<Integer, IndiaCensusDAO> censusHashMap = new HashMap<>();
 
-        public int loadStateCensusData(String filePath) throws IOException, CSVBuilderException{
+    public int loadStateCensusData(String filePath) throws IOException, CSVBuilderException {
         try (Reader reader = Files.newBufferedReader(Paths.get(filePath))) {
-        Iterator<CSVStateCensus> csvFileIterator = csvBuilder.getCSVFileIterator(reader, CSVStateCensus.class);
-        Integer count = 0;
-        while (csvFileIterator.hasNext()) {
-            IndiaCensusDAO indiaCensusDAO = new IndiaCensusDAO(csvFileIterator.next());
-            this.censusHashMap.put(count,indiaCensusDAO);
-            count++;
+            Iterator<CSVStateCensus> csvFileIterator = csvBuilder.getCSVFileIterator(reader, CSVStateCensus.class);
+            Integer count = 0;
+            while (csvFileIterator.hasNext()) {
+                IndiaCensusDAO indiaCensusDAO = new IndiaCensusDAO(csvFileIterator.next());
+                this.censusHashMap.put(count, indiaCensusDAO);
+                count++;
+            }
+            return this.censusHashMap.size();
+        } catch (NoSuchFileException e) {
+            throw new CSVBuilderException(CSVBuilderException.ExceptionType.ENTERED_WRONG_FILE_NAME,
+                    "FILE NAME IS INCORRECT");
+        } catch (RuntimeException e) {
+            throw new CSVBuilderException(CSVBuilderException.ExceptionType.INCORRECT_DELIMITER_OR_HEADER,
+                    "FILE DELIMITER OR HEADER IS INCORRECT");
         }
-        return this.censusHashMap.size();
-    } catch (NoSuchFileException e) {
-        throw new CSVBuilderException(CSVBuilderException.ExceptionType.ENTERED_WRONG_FILE_NAME,
-                "FILE NAME IS INCORRECT");
-    } catch (RuntimeException e) {
-        throw new CSVBuilderException(CSVBuilderException.ExceptionType.INCORRECT_DELIMITER_OR_HEADER,
-                "FILE DELIMITER OR HEADER IS INCORRECT");
     }
-}
     public int loadStateCodeData(String filePath) throws IOException, CSVBuilderException {
         try (Reader reader = Files.newBufferedReader(Paths.get(filePath))) {
             Iterator<StateCode> csvFileIterator = csvBuilder.getCSVFileIterator(reader,StateCode.class);
@@ -98,5 +98,15 @@ public class CensusAnalyser {
             sortedByValue.put(entry.getKey(), entry.getValue());
         }
         return sortedByValue;
+    }
+    public String getStatePopulationWiseSortedData() throws CSVBuilderException {
+        if (censusHashMap == null || censusHashMap.size() == 0)
+            throw new CSVBuilderException(CSVBuilderException.ExceptionType.NO_CENSUS_DATA, "Data empty");
+        Comparator<Map.Entry<Integer, IndiaCensusDAO>> censusComparator = Comparator.comparing(census -> census.getValue().population);
+        LinkedHashMap<Integer, IndiaCensusDAO> sortedByValue = this.sort(censusComparator);
+        List<IndiaCensusDAO> sortedList = new ArrayList<IndiaCensusDAO>(sortedByValue.values());
+        Collections.reverse(sortedList);
+        String sortedStatePopulationJson = new Gson().toJson(sortedList);
+        return sortedStatePopulationJson;
     }
 }
