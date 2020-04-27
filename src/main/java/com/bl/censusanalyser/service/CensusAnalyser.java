@@ -22,28 +22,14 @@ import static java.nio.file.Paths.*;
 
 public class CensusAnalyser {
     ICSVBuilder csvBuilder = new CSVBuilderFactory().createCSVBuilder();
-    Collection<Object> stateCensusRecords = null;
-    Collection<Object> stateCodeRecords = null;
-    HashMap<Object, Object> stateCodeHashMap = null;
-    HashMap<Object, Object> stateCensusHashMap = null;
+    Collection<Object> censusRecords = null;
+    HashMap<Object, Object> censusHashMap = null;
 
-    public int loadStateCensusCSVFileData(String filePath) throws CSVBuilderException, IOException {
+    public int loadCensusData(String filePath , Class csvClass) throws IOException, CSVBuilderException {
         try (Reader reader = Files.newBufferedReader(Paths.get(filePath))) {
-            stateCensusHashMap = csvBuilder.getCSVFileMap(reader, CSVStateCensus.class);
-            return stateCensusHashMap.size();
-        } catch (NoSuchFileException e) {
-            throw new CSVBuilderException(CSVBuilderException.ExceptionType.ENTERED_WRONG_FILE_NAME,
-                    "FILE NAME IS INCORRECT");
-        } catch (RuntimeException e) {
-            throw new CSVBuilderException(CSVBuilderException.ExceptionType.INCORRECT_DELIMITER_OR_HEADER,
-                    "FILE DELIMITER OR HEADER IS INCORRECT");
-        }
-    }
-    public int loadStateCodeCSVFileData(String filePath) throws IOException, CSVBuilderException {
-        try (Reader reader = Files.newBufferedReader(Paths.get(filePath))) {
-            stateCodeHashMap = csvBuilder.getCSVFileMap(reader, StateCode.class);
-            return stateCodeHashMap.size();
-        } catch (NoSuchFileException e) {
+            censusHashMap = csvBuilder.getCSVFileMap(reader, csvClass);
+            return censusHashMap.size();
+        }catch (NoSuchFileException e) {
             throw new CSVBuilderException(CSVBuilderException.ExceptionType.ENTERED_WRONG_FILE_NAME,
                     "FILE NAME IS INCORRECT");
         } catch (RuntimeException e) {
@@ -63,22 +49,21 @@ public class CensusAnalyser {
         }
     }
     public String getStateWiseSortedData() throws CSVBuilderException {
-        if (stateCensusRecords == null || stateCensusRecords.size() == 0)
-            if (stateCensusHashMap == null || stateCensusHashMap.size() == 0)
+            if (censusHashMap == null || censusHashMap.size() == 0)
                 throw new CSVBuilderException(CSVBuilderException.ExceptionType.NO_CENSUS_DATA, "Data empty");
         Comparator<CSVStateCensus> censusCSVComparator = Comparator.comparing(csvStateCensus -> csvStateCensus.State);
-        this.sort(censusCSVComparator , stateCensusHashMap);
-        stateCensusRecords = stateCensusHashMap.values();
-        String sortedStateCensusJson = new Gson().toJson(stateCensusRecords);
+        this.sort(censusCSVComparator , censusHashMap);
+        censusRecords = censusHashMap.values();
+        String sortedStateCensusJson = new Gson().toJson(censusRecords);
         return sortedStateCensusJson;
     }
         public String getStateCodeWiseSortedData () throws CSVBuilderException {
-            if (stateCodeHashMap == null || stateCodeHashMap.size() == 0)
+            if (censusHashMap == null || censusHashMap.size() == 0)
                 throw new CSVBuilderException(CSVBuilderException.ExceptionType.NO_CENSUS_DATA, "Data empty");
             Comparator<StateCode> stateCodeCSVComparator = Comparator.comparing(stateCode -> stateCode.stateCode);
-            this.sort(stateCodeCSVComparator, stateCodeHashMap);
-            stateCodeRecords = stateCodeHashMap.values();
-            String sortedStateCodeJson = new Gson().toJson(stateCodeRecords);
+            this.sort(stateCodeCSVComparator, censusHashMap);
+            censusRecords = censusHashMap.values();
+            String sortedStateCodeJson = new Gson().toJson(censusRecords);
             return sortedStateCodeJson;
         }
         public <E > void sort (Comparator < E > censusCSVComparator, HashMap < Object, Object > censusRecords){
@@ -94,4 +79,3 @@ public class CensusAnalyser {
             }
         }
     }
-

@@ -1,6 +1,6 @@
 package com.bl.censusanalyser;
 
-public class Constant {
+public class FileLocation {
     public static String PATH_OF_CSV_FILE = "./src/test/resources/StateCensusData.csv";
     public static String PATH_OF_CSV_FILE_FOR_FILE_NOT_FOUND_EXCEPTION = "./src/test/resources/StateCensusData.csv";
     public static String PATH_OF_CSV_FILE_FOR_INCORRECT_TYPE_EXCEPTION = "/home/Desktop/IndiaCensusAnalyser/src/test/resources/StateCensusData.docx";
