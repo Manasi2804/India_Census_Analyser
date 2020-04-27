@@ -119,4 +119,14 @@ public class CensusAnalyser {
         String sortedStatePopulationDensityJson = new Gson().toJson(sortedList);
         return sortedStatePopulationDensityJson;
     }
+    public String getStateAreaWiseSortedData() throws CSVBuilderException {
+        if (censusHashMap == null || censusHashMap.size() == 0)
+            throw new CSVBuilderException(CSVBuilderException.ExceptionType.NO_CENSUS_DATA, "Data empty");
+        Comparator<Map.Entry<Integer, IndiaCensusDAO>> censusComparator = Comparator.comparing(census -> census.getValue().AreaInSqKm);
+        LinkedHashMap<Integer, IndiaCensusDAO> sortedByValue = this.sort(censusComparator);
+        List<IndiaCensusDAO> sortedList = new ArrayList<IndiaCensusDAO>(sortedByValue.values());
+        Collections.reverse(sortedList);
+        String sortedStateAreaJson = new Gson().toJson(sortedList);
+        return sortedStateAreaJson;
+    }
 }
