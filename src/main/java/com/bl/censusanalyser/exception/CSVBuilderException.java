@@ -1,6 +1,6 @@
 package com.bl.censusanalyser.exception;
 
-public class CSVBuilderException extends Exception{
+public class CSVBuilderException extends RuntimeException{
     public enum ExceptionType
 {
     INCORRECT_DELIMITER_OR_HEADER, ENTERED_WRONG_FILE_TYPE, INCORRECT_DELIMITER,
