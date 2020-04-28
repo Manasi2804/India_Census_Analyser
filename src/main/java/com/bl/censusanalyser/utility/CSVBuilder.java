@@ -14,29 +14,16 @@ import java.util.List;
 
 public class CSVBuilder implements ICSVBuilder {
     @Override
-    public <E> HashMap<E, E> getCSVFileMap(Reader reader, Class csvClass) throws CSVBuilderException {
-        return null;
-    }
-    @Override
-    public <E> Iterator<E> getCSVFileIterator(Reader reader, Class csvClass) throws CSVBuilderException
-    {
+    public <E> Iterator<E> getCSVFileIterator(Reader reader, Class csvClass) throws CSVBuilderException {
         try {
-            CSVReader csvReader = new CSVReader(reader);
-            CsvToBean<E> csvToBean = new CsvToBeanBuilder<E>(csvReader).withType(csvClass).build();
-            return csvToBean.iterator();
-        } catch (IllegalStateException e){
+            CsvToBeanBuilder<E> csvToBeanBuilder = new CsvToBeanBuilder<E>(reader);
+            csvToBeanBuilder.withType(csvClass);
+            csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
+            CsvToBean<E> csvToBean = csvToBeanBuilder.build();
+            Iterator<E> censusCSVIterator = csvToBean.iterator();
+            return censusCSVIterator;
+        } catch (IllegalStateException e) {
             throw new CSVBuilderException(CSVBuilderException.ExceptionType.UNABLE_TO_PARSE, e.getMessage());
         }
     }
-    @Override
-    public <E> int getCount(Iterator<E> csvRecords)
-    {
-        int noOfRecords = 0;
-        while (csvRecords.hasNext())
-        {
-            noOfRecords++;
-            csvRecords.next();
-        }
-        return noOfRecords;
-    }
-    }
+}
