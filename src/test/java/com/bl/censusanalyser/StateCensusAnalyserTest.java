@@ -207,4 +207,30 @@ public class StateCensusAnalyserTest {
         } catch (CSVBuilderException e) {
             e.printStackTrace(); }
     }
+    //11.1
+    @Test
+    public void givenIndianStateCensusCSVFile_WhenSortedPopulationAndDensity_ShouldReturnSortedList() throws IOException {
+        try {
+            IndiaCensusAnalyser.loadCensusData(PATH_OF_CSV_FILE);
+            String sortedPopulationAndDensityData = IndiaCensusAnalyser.getDualSortByPopulationAndDensity();
+            IndiaStateCensusCSV[] censusCSV = new Gson().fromJson(sortedPopulationAndDensityData, IndiaStateCensusCSV[].class);
+            Assert.assertEquals("Uttar Pradesh", censusCSV[0].State);
+            Assert.assertEquals("Sikkim", censusCSV[28].State);
+        } catch (CSVBuilderException e) {
+            e.printStackTrace();
+        }
+    }
+    //11.2
+    @Test
+    public void givenUSCensusCSVFile_WhenSortedPopulationAndDensity_ShouldReturnSortedList() throws IOException {
+        try {
+            USCensusAnalyser.loadCensusData(PATH_OF_US_CENSUS_CSV_FILE);
+            String sortedPopulationAndDensityData = USCensusAnalyser.getDualSortByPopulationAndDensity();
+            USCensus[] censusCSV = new Gson().fromJson(sortedPopulationAndDensityData, USCensus[].class);
+            Assert.assertEquals("California", censusCSV[0].state);
+            Assert.assertEquals("Wyoming", censusCSV[50].state);
+        } catch (CSVBuilderException e) {
+            e.printStackTrace();
+        }
+    }
 }

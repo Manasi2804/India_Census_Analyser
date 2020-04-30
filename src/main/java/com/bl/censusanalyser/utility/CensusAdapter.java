@@ -12,13 +12,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.stream.StreamSupport;
 
-public  abstract class CensusAdapter {
+public abstract class CensusAdapter {
     HashMap<Integer, CensusDAO> censusHashMap = new HashMap<Integer, CensusDAO>();
     CSVBuilderFactory csvBuilderFactory = new CSVBuilderFactory();
     ICSVBuilder csvBuilder = csvBuilderFactory.createCSVBuilder();
 
     public abstract HashMap<Integer, CensusDAO> loadCensusData(String... csvFilePath) throws CSVBuilderException, IOException;
-
     public <E> HashMap<Integer, CensusDAO> loadCensusData(Class<E> CSVClass, String... filePath) throws CSVBuilderException {
         try (Reader reader = Files.newBufferedReader(Paths.get(filePath[0]))) {
             Iterator<E> csvFileIterator = csvBuilder.getCSVFileIterator(reader, CSVClass);
