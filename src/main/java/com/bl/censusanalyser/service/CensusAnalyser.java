@@ -19,17 +19,13 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class CensusAnalyser {
-    CensusLoader censusLoader = new CensusLoader();
     Collection<CensusDAO> censusRecords = null;
     HashMap<Integer, CensusDAO> censusHashMap = new HashMap<Integer,CensusDAO >();
+    public enum COUNTRY {INDIA, US};
 
-    public int loadCensusData(String... filePath) throws IOException, CSVBuilderException {
-        censusHashMap = censusLoader.loadStateCensusData(censusHashMap, filePath);
-        return censusHashMap.size();
-    }
-
-    public int loadUSCensusData(String filePath) throws IOException, CSVBuilderException {
-        censusHashMap = censusLoader.loadUSCensusData(censusHashMap, filePath);
+    public int loadCensusData(COUNTRY country, String... filePath) throws IOException, CSVBuilderException {
+        CensusAdapter censusDataLoader = CensusAdapterFactory.getCensusData(country);
+        censusHashMap = censusDataLoader.loadCensusData(filePath);
         return censusHashMap.size();
     }
 
