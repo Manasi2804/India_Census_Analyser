@@ -1,7 +1,7 @@
 package com.bl.censusanalyser.utility;
 
 import com.bl.censusanalyser.exception.CSVBuilderException;
-import com.bl.censusanalyser.model.CSVStateCensus;
+import com.bl.censusanalyser.model.IndiaStateCensusCSV;
 import com.bl.censusanalyser.model.USCensus;
 
 import java.io.IOException;
@@ -24,19 +24,19 @@ public  abstract class CensusAdapter {
             Iterator<E> csvFileIterator = csvBuilder.getCSVFileIterator(reader, CSVClass);
             Iterable<E> csvIterable = () -> csvFileIterator;
 
-            if (CSVClass.getName().equals("com.bl.censusanalyser.model.CSVStateCensus")) {
+            if (CSVClass.getName().equals("com.bl.censusanalyser.model.IndiaStateCensusCSV")) {
                 final Integer[] count = {0};
-                StreamSupport.stream(csvIterable.spliterator(), false)
+                StreamSupport.stream(csvIterable.spliterator(), false).map(IndiaStateCensusCSV.class::cast)
                         .forEach(censusCSV -> {
-                            censusHashMap.put(count[0], new CensusDAO((CSVStateCensus) censusCSV));
+                            censusHashMap.put(count[0], new CensusDAO(censusCSV));
                             count[0]++;
                         });
             }
             if (CSVClass.getName().equals("com.bl.censusanalyser.model.USCensus")) {
                 final Integer[] count = {0};
-                StreamSupport.stream(csvIterable.spliterator(), false)
+                StreamSupport.stream(csvIterable.spliterator(), false).map(USCensus.class::cast)
                         .forEach(censusCSV -> {
-                            censusHashMap.put(count[0], new CensusDAO((USCensus)censusCSV));
+                            censusHashMap.put(count[0], new CensusDAO(censusCSV));
                             count[0]++;
                         });
             }

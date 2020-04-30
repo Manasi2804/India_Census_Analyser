@@ -1,16 +1,11 @@
 package com.bl.censusanalyser.utility;
 
 import com.bl.censusanalyser.exception.CSVBuilderException;
-import com.bl.censusanalyser.model.CSVStateCensus;
-import com.opencsv.CSVReader;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 
 import java.io.Reader;
-import java.io.Reader;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 
 public class CSVBuilder implements ICSVBuilder {
     @Override

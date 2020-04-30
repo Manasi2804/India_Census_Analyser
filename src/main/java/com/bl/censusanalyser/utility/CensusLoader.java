@@ -1,8 +1,8 @@
 package com.bl.censusanalyser.utility;
 
 import com.bl.censusanalyser.exception.CSVBuilderException;
-import com.bl.censusanalyser.model.CSVStateCensus;
-import com.bl.censusanalyser.model.StateCode;
+import com.bl.censusanalyser.model.IndiaStateCensusCSV;
+import com.bl.censusanalyser.model.IndiaStateCodeCSV;
 import com.bl.censusanalyser.model.USCensus;
 
 import java.io.IOException;
@@ -19,8 +19,8 @@ public class CensusLoader {
     public HashMap<Integer, CensusDAO> loadStateCensusData(HashMap<Integer, CensusDAO> censusHashMap, String... filePath)
             throws CSVBuilderException, IOException {
         try (Reader reader = Files.newBufferedReader(Paths.get(filePath[0]))) {
-            Iterator<CSVStateCensus> csvFileIterator = csvBuilder.getCSVFileIterator(reader, CSVStateCensus.class);
-            Iterable<CSVStateCensus> csvIterable = () -> csvFileIterator;
+            Iterator<IndiaStateCensusCSV> csvFileIterator = csvBuilder.getCSVFileIterator(reader, IndiaStateCensusCSV.class);
+            Iterable<IndiaStateCensusCSV> csvIterable = () -> csvFileIterator;
             final Integer[] count = {0};
             StreamSupport.stream(csvIterable.spliterator(), false)
                     .forEach(censusCSV -> {
@@ -41,8 +41,8 @@ public class CensusLoader {
 
     public HashMap<Integer, CensusDAO> loadStateCodeData(HashMap<Integer, CensusDAO> censusHashMap, String filePath) throws CSVBuilderException, IOException {
         try (Reader reader = Files.newBufferedReader(Paths.get(filePath))) {
-            Iterator<StateCode> csvFileIterator = csvBuilder.getCSVFileIterator(reader, StateCode.class);
-            Iterable<StateCode> csvIterable = () -> csvFileIterator;
+            Iterator<IndiaStateCodeCSV> csvFileIterator = csvBuilder.getCSVFileIterator(reader, IndiaStateCodeCSV.class);
+            Iterable<IndiaStateCodeCSV> csvIterable = () -> csvFileIterator;
             final Integer[] count = {0};
             StreamSupport.stream(csvIterable.spliterator(), false)
                     .forEach(censusCSV -> {

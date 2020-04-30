@@ -10,19 +10,19 @@ public class USCensus {
     public String state;
 
     @CsvBindByName(column = "Population")
-    public long population;
+    public Integer population;
 
     @CsvBindByName(column = "Total area")
-    public double area;
+    public Double area;
 
     @CsvBindByName(column = "Population Density")
-    public float populationDensity;
+    public Double populationDensity;
 
     public USCensus() {
     }
 
-    public USCensus(String stateID, String state, long population, double area, float populationDensity) {
-        this.stateID = stateID;
+    public USCensus(String stateCode, String state, Integer population, Double area, Double populationDensity) {
+        this.stateID = stateCode;
         this.state = state;
         this.population = population;
         this.area = area;

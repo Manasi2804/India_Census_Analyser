@@ -1,10 +1,8 @@
 package com.bl.censusanalyser.utility;
 
 import com.bl.censusanalyser.exception.CSVBuilderException;
-import com.bl.censusanalyser.model.CSVStateCensus;
 
 import java.io.Reader;
-import java.util.HashMap;
 import java.util.Iterator;
 
 public interface ICSVBuilder {
