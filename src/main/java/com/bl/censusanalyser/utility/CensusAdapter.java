@@ -36,7 +36,7 @@ public  abstract class CensusAdapter {
                 final Integer[] count = {0};
                 StreamSupport.stream(csvIterable.spliterator(), false)
                         .forEach(censusCSV -> {
-                            censusHashMap.put(count[0], new CensusDAO(new USCensus()));
+                            censusHashMap.put(count[0], new CensusDAO((USCensus)censusCSV));
                             count[0]++;
                         });
             }

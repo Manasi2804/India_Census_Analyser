@@ -166,4 +166,17 @@ public class StateCensusAnalyserTest {
         int noOfRecords = censusAnalyser.loadCensusData(CensusAnalyser.COUNTRY.US,PATH_OF_US_CENSUS_CSV_FILE);
         Assert.assertEquals(51, noOfRecords);
     }
+    //9.1
+    @Test
+    public void givenTheUSCensusCSVFile_WhenSortedOnPopulation_ShouldReturnSortedList() throws IOException {
+        try {
+            censusAnalyser.loadCensusData(CensusAnalyser.COUNTRY.US, PATH_OF_US_CENSUS_CSV_FILE);
+            String sortedStatePopulationData = censusAnalyser.getStatePopulationWiseSortedData();
+            CensusDAO[] censusCSV = new Gson().fromJson(sortedStatePopulationData, CensusDAO[].class);
+            Assert.assertEquals("California", censusCSV[0].state);
+            Assert.assertEquals("Wyoming", censusCSV[50].state);
+        } catch (CSVBuilderException e) {
+            e.printStackTrace();
+        }
+    }
 }
