@@ -1,54 +1,62 @@
 package com.bl.censusanalyser.service;
-
+import com.bl.censusanalyser.dao.CensusDAO;
 import com.bl.censusanalyser.exception.CSVBuilderException;
-import com.bl.censusanalyser.utility.*;
+import com.bl.censusanalyser.builder.*;
+import com.bl.censusanalyser.model.IndiaStateCensusCSV;
 import com.google.gson.Gson;
-
-import java.io.File;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class CensusAnalyser {
-    HashMap<Integer, CensusDAO> censusHashMap = new HashMap<Integer,CensusDAO >();
-    public enum COUNTRY {INDIA, US};
-    public enum SortingMode {AREA, STATE, STATECODE, DENSITY, POPULATION}
-    private COUNTRY country;
-    public CensusAnalyser(COUNTRY country) {
-        this.country = country;
-    }
-    public int loadCensusData(String... filePath) throws IOException, CSVBuilderException {
-        CensusAdapter censusDataLoader = CensusAdapterFactory.getCensusData(country);
-        censusHashMap = censusDataLoader.loadCensusData(filePath);
-        return censusHashMap.size();
-    }
-    public static void getFileExtension(File filePath) throws CSVBuilderException {
-        String fileName = filePath.getName();
-        String extension = null;
-        if (fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0) {
-            extension = fileName.substring(fileName.lastIndexOf(".") + 1);
+public class CensusAnalyser <T> {
+    List<T> csvFileList = null;
+    Map<Object, T> csvStateCodeMap = new HashMap<>();
+
+    // Read State Census Data CSV file
+    public  int loadCensusData(String csvFilePath, Class<T> csvClass) throws CSVBuilderException {
+        try {
+            BufferedReader reader = Files.newBufferedReader(Paths.get(csvFilePath));
+            ICSVBuilder icsvBuilder = CSVBuilderFactory.ISCVBuilder();
+            Iterator<T> csvStateCensusIterator = icsvBuilder.getFileIterator(reader, csvClass);
+            while (csvStateCensusIterator.hasNext()) {
+                CensusDAO value = new CensusDAO((IndiaStateCensusCSV) csvStateCensusIterator.next());
+                this.csvStateCodeMap.put(value.getState(), (T) value);
+                csvFileList = csvStateCodeMap.values().stream().collect(Collectors.toList());
+            }
+            int noOfRecords = csvStateCodeMap.size();
+            return noOfRecords;
+        } catch (IOException e) {
+            throw new CSVBuilderException(e.getMessage(), CSVBuilderException.ExceptionType.FILE_NOT_FOUND);
+        } catch (RuntimeException e) {
+            throw new CSVBuilderException(e.getMessage(), CSVBuilderException.ExceptionType.INCORRECT_FILE);
         }
-        if (!(extension.equals("csv"))) {
-            throw new CSVBuilderException(CSVBuilderException.ExceptionType.ENTERED_WRONG_FILE_TYPE,
-                    "FILE TYPE IS INCORRECT");
+    }
+    // Sort The Data From Csv File
+    public String getSortData(Object T, int Number) throws CSVBuilderException {
+        if (csvFileList.size() == 0 | csvFileList == null) {
+            throw new CSVBuilderException("No Census Data", CSVBuilderException.ExceptionType.NO_CENSUS_DATA);
         }
+        Comparator<T> stateCensusAnalyserComparator = Comparator.comparing(csvCounter -> T.toString());
+        this.sort(csvFileList, Number);
+        String sortedData = new Gson().toJson(csvFileList);
+        return sortedData;
     }
-    public String getSortedCensusData(SortingMode mode) throws CSVBuilderException {
-        if (censusHashMap == null || censusHashMap.size() == 0)
-            throw new CSVBuilderException(CSVBuilderException.ExceptionType.NO_CENSUS_DATA, "Data empty");
-        ArrayList censusDTO = censusHashMap.values().stream()
-                .sorted(CensusDAO.getSortComparator(mode))
-                .map(censusDAO -> censusDAO.getCensusDTO(country))
-                .collect(Collectors.toCollection(ArrayList::new));
-        return new Gson().toJson(censusDTO);
-    }
-    public String getDualSortByPopulationAndDensity() throws CSVBuilderException {
-        if (censusHashMap == null || censusHashMap.size() == 0)
-            throw new CSVBuilderException(CSVBuilderException.ExceptionType.NO_CENSUS_DATA, "No Census Data");
-        ArrayList censusDTO = censusHashMap.values().stream()
-                .sorted(Comparator.comparingInt(CensusDAO::getPopulation).thenComparingDouble(CensusDAO::getDensityPerSqkm).reversed())
-                .map(c -> c.getCensusDTO(country))
-                .collect(Collectors.toCollection(ArrayList::new));
-        return new Gson().toJson(censusDTO);
+    //Sorting Method
+    public void sort(List<T> csvFileList, int number) {
+        for (int i = 0; i < csvFileList.size(); i++) {
+            for (int j = 0; j < csvFileList.size() - i - 1; j++) {
+                String census1[] = csvFileList.get(i).toString().split(",");
+                String census2[] = csvFileList.get(j).toString().split(",");
+                if (census1[1].compareToIgnoreCase(census2[1]) > 0) {
+                    T censusData = csvFileList.get(i);
+                    T censusData1 = csvFileList.get(j);
+                    csvFileList.set(j, censusData);
+                    csvFileList.set(i, censusData1);
+                }
+            }
+        }
     }
 }

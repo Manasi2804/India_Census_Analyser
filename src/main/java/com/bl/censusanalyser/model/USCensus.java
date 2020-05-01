@@ -18,7 +18,7 @@ public class USCensus {
     @CsvBindByName(column = "Population Density")
     public Double populationDensity;
 
-    public USCensus() {
+    public USCensus(Integer stateCode, String state, Integer population, double areaInSqKm, double densityPerSqkm) {
     }
 
     public USCensus(String stateCode, String state, Integer population, Double area, Double populationDensity) {

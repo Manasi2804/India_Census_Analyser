@@ -18,7 +18,7 @@ public class IndiaStateCensusCSV
     public String statecode =new IndiaStateCodeCSV().getStateCode();
     public String stateCode;
 
-    public IndiaStateCensusCSV() {
+    public IndiaStateCensusCSV(String state, Integer stateCode, Integer population, double areaInSqKm, double densityPerSqkm) {
     }
 
     public IndiaStateCensusCSV(String state, String stateCode, Integer population, Double areaInSqKm, Double densityPerSqkm) {
@@ -38,5 +38,22 @@ public class IndiaStateCensusCSV
                 ", AreaInSqKm=" + AreaInSqKm +
                 ", DensityPerSqkm=" + DensityPerSqkm +
                 '}';
+    }
+
+    public String getTIN() {
+        return getTIN();
+    }
+
+    public String getStateCode() {
+        return getStateCode();
+    }
+
+    public String getStateName() {
+        return getStateName();
+    }
+
+    public String getSrNo() {
+        return getSrNo();
+
     }
 }
